@@ -17,11 +17,12 @@ root.title("Searching Algorithms")
 
 root.geometry("1000x800+0+0")
 root.minsize(800, 500)
+root.config(bg = '#ECECEC')
 
 # Menu walls
 menuBar = tk.Menu(root)
 menuBar.config(bg = '#ECECEC', font = ('Normal', 9))
-root.config(menu = menuBar, bg = '#ECECEC')
+root.config(menu = menuBar)
 presetMenu = tk.Menu(menuBar, tearoff=0)
 menuBar.add_cascade(label="Preset walls", menu=presetMenu)
 
@@ -118,16 +119,16 @@ def getAlgorithmName():
     return comboBox.get()
 
 solveButton = tk.Button(frm2, text="Solve")
-solveButton.place(relx=0.05, rely=0.5, relwidth=0.45, relheight=0.5)
+solveButton.place(relx=0.05, rely=0.45, relwidth=0.45, relheight=0.5)
 
 def getSolveButoon():
     return solveButton
 
 clearButton = tk.Button(frm2, text="Clear Route")
-clearButton.place(relx=0.5, rely=0.5, relwidth=0.45, relheight=0.25)
+clearButton.place(relx=0.5, rely=0.45, relwidth=0.45, relheight=0.25)
 
 clearAllButton = tk.Button(frm2, text="Clear All")
-clearAllButton.place(relx=0.5, rely=0.75, relwidth=0.45, relheight=0.25)
+clearAllButton.place(relx=0.5, rely=0.7, relwidth=0.45, relheight=0.25)
 
 def clearMethod(tipoClear):
     for i in range(15):
@@ -143,10 +144,28 @@ def clearMethod(tipoClear):
 clearButton.bind("<Button-1>", lambda event, tipoClear=0: clearMethod(tipoClear))
 clearAllButton.bind("<Button-1>", lambda event, tipoClear=1: clearMethod(tipoClear))
 
-comboBox = ttk.Combobox(frm2, width=10, state="readonly", values=["BFS", "DFS", "Voraz"])
-#comboBox.grid(row=2)
+comboBox = ttk.Combobox(frm2, width=10, state="readonly", values=["BFS", "DFS", "GREEDY"])
 comboBox.place(relx=0.05, rely=0.05, relwidth=0.9, relheight=0.15)
 comboBox.set(comboBox['values'][0])
+
+
+# Frame3, result of algorithms
+
+frm2 = tk.LabelFrame(root, padx=10, pady=10, text="Results", bg = '#ECECEC')
+frm2.place(relx=0.7, rely=0.55, relwidth=0.25, relheight=0.3)
+
+pathLength = tk.Label(frm2, text='Path Length: ', anchor="w")
+pathLength.place(relx=0.05, rely=0.05, relwidth=0.6, relheight=0.15)
+pathLengthValue = tk.Label(frm2, text='0', anchor="e")
+pathLengthValue.place(relx=0.7, rely=0.05, relwidth=0.25, relheight=0.15)
+nodesGenerated = tk.Label(frm2, text='Nodes Generated: ', anchor="w")
+nodesGenerated.place(relx=0.05, rely=0.25, relwidth=0.6, relheight=0.15)
+nodesGeneratedValue = tk.Label(frm2, text='0', anchor="e")
+nodesGeneratedValue.place(relx=0.7, rely=0.25, relwidth=0.25, relheight=0.15)
+maxNodesStored = tk.Label(frm2, text='Max Nodes in OPEN:', anchor="w")
+maxNodesStored.place(relx=0.05, rely=0.45, relwidth=0.6, relheight=0.15)
+maxNodesStoredValue = tk.Label(frm2, text='0', anchor="e")
+maxNodesStoredValue.place(relx=0.7, rely=0.45, relwidth=0.25, relheight=0.15)
 
 
 def loop():

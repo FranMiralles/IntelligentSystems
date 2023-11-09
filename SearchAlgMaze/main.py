@@ -74,13 +74,13 @@ def VorazSearch():
 # Adjacent return method
 def getAdjacents(row, column, childPriority):
     res = []
-    if (column + 1 < 15  and inter.buttons[row][column + 1].cget('bg') != "black"):
+    if (column + 1 < 15  and inter.buttons[row][column + 1].cget('bg') != inter.WALLS):
         res.append(node('l', childPriority, row, column + 1))
-    if (row + 1 < 15  and inter.buttons[row + 1][column].cget('bg') != "black"):
+    if (row + 1 < 15  and inter.buttons[row + 1][column].cget('bg') != inter.WALLS):
         res.append(node('u', childPriority, row + 1, column))
-    if (row - 1 >= 0 and inter.buttons[row - 1][column].cget('bg') != "black"):
+    if (row - 1 >= 0 and inter.buttons[row - 1][column].cget('bg') != inter.WALLS):
         res.append(node('d', childPriority, row - 1, column))
-    if (column - 1 >= 0  and inter.buttons[row][column - 1].cget('bg') != "black"):
+    if (column - 1 >= 0  and inter.buttons[row][column - 1].cget('bg') != inter.WALLS):
         res.append(node('r', childPriority, row, column - 1))
     
     return res
@@ -91,8 +91,8 @@ def reconstructPath(directionsmap, currentNode):
     for i in range(15):
         for j in range(15):
             if((i != 1 or j != 1) and (i != 13 or j != 13)):
-                if(inter.buttons[i][j].cget("bg") != 'black' and directionsmap[i][j] != None):
-                    inter.buttons[i][j].config(bg='lightblue')
+                if(inter.buttons[i][j].cget("bg") != inter.WALLS and directionsmap[i][j] != None):
+                    inter.buttons[i][j].config(bg=inter.GENERATED)
 
     currentRow = currentNode.__getattribute__("row")
     currentColumn = currentNode.__getattribute__("column")
@@ -114,7 +114,7 @@ def reconstructPath(directionsmap, currentNode):
         step = directionsmap[currentRow][currentColumn]
         if(step == 'E'):
             break
-        currentButton.config(bg='blue')
+        currentButton.config(bg=inter.ROUTE)
     return 0
 
 def createDirectionsMap():

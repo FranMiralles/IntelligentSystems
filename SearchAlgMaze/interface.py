@@ -4,12 +4,14 @@ import os
 from PIL import Image, ImageTk
 
 #Color constants
-WALLS = 'black'
-DIRT = '#d9d9d9'
-SPECIAL = 'lightgreen'
-ROUTE = 'blue'
-GENERATED = 'lightblue'
+WALLS = '#031602' #black
+DIRT = '#66d401' #d9d9d9
+SPECIAL = '#b34d03' #lightgreen
+ROUTE = '#0e0f93'
+GENERATED = '#8080ff'
+BACK = '#e5ffbe' #ECECEC
 presetsData = 'presets.txt'
+
 
 # Instance of the window
 root = tk.Tk()
@@ -17,11 +19,11 @@ root.title("Searching Algorithms")
 
 root.geometry("1000x800+0+0")
 root.minsize(800, 500)
-root.config(bg = '#ECECEC')
+root.config(bg = BACK)
 
 # Menu walls
 menuBar = tk.Menu(root)
-menuBar.config(bg = '#ECECEC', font = ('Normal', 9))
+menuBar.config(bg = BACK, font = ('Normal', 9))
 root.config(menu = menuBar)
 presetMenu = tk.Menu(menuBar, tearoff=0)
 menuBar.add_cascade(label="Preset walls", menu=presetMenu)
@@ -80,7 +82,7 @@ def pressButton(event):
 
 # Frame1, maze
 
-frm1 = tk.LabelFrame(root, text="Maze", bg = '#ECECEC')
+frm1 = tk.LabelFrame(root, text="Maze", bg = BACK)
 frm1.place(relx=0.05, rely=0.05, relwidth=0.6, relheight=0.85)
 
 buttons = []
@@ -93,7 +95,7 @@ for i in range(15):
     row = []
     for j in range(15):
         button = tk.Button(frm1, text="", width=2, height=1)
-        button.place(relx=0.01 + j/15.5, rely= 0.01 + i/15.5, relheight=0.065, relwidth=0.065)
+        button.place(relx=0.01 + j/15.5, rely= 0.01 + i/15.5, relheight=0.066, relwidth=0.066)
         button.row = i
         button.col = j
         button.button = button
@@ -111,7 +113,7 @@ for i in range(15):
 
 # Frame2, select algorithms
 
-frm2 = tk.LabelFrame(root, padx=10, pady=10, text="Action", bg = '#ECECEC')
+frm2 = tk.LabelFrame(root, padx=10, pady=10, text="Action", bg = BACK)
 frm2.place(relx=0.7, rely=0.1, relwidth=0.25, relheight=0.4)
 
 
@@ -144,14 +146,14 @@ def clearMethod(tipoClear):
 clearButton.bind("<Button-1>", lambda event, tipoClear=0: clearMethod(tipoClear))
 clearAllButton.bind("<Button-1>", lambda event, tipoClear=1: clearMethod(tipoClear))
 
-comboBox = ttk.Combobox(frm2, width=10, state="readonly", values=["BFS", "DFS", "GREEDY"])
+comboBox = ttk.Combobox(frm2, width=10, state="readonly", values=["BFS", "DFS", "GREEDY MANHATTAN", "A MANHATTAN"])
 comboBox.place(relx=0.05, rely=0.05, relwidth=0.9, relheight=0.15)
 comboBox.set(comboBox['values'][0])
 
 
 # Frame3, result of algorithms
 
-frm2 = tk.LabelFrame(root, padx=10, pady=10, text="Results", bg = '#ECECEC')
+frm2 = tk.LabelFrame(root, padx=10, pady=10, text="Results", bg = BACK)
 frm2.place(relx=0.7, rely=0.55, relwidth=0.25, relheight=0.3)
 
 pathLength = tk.Label(frm2, text='Path Length: ', anchor="w")

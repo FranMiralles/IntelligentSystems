@@ -7,7 +7,8 @@ def electAlgorithmToSolve(event):
     inter.clearMethod(0)
     if(algorithm == "BFS"): SearchAlgorithm("BFS")
     elif(algorithm == "DFS"): SearchAlgorithm("DFS")
-    elif(algorithm == "GREEDY"): SearchAlgorithm("GREEDY")
+    elif(algorithm == "GREEDY MANHATTAN"): SearchAlgorithm("GREEDY MANHATTAN")
+    elif(algorithm == "A MANHATTAN"): SearchAlgorithm("A MANHATTAN")
 
 def SearchAlgorithm(type):
     directionsMap = createDirectionsMap()
@@ -19,7 +20,9 @@ def SearchAlgorithm(type):
         pq.insert(node('E', 0, 1, 1))
     if(type == 'DFS'):
         pq.insert(node('E', 0, 1, 1))
-    if(type == 'GREEDY'):
+    if(type == 'GREEDY MANHATTAN'):
+        pq.insert(node('E', distanceManhattan(1, 1), 1, 1))
+    if(type == 'A MANHATTAN'):
         pq.insert(node('E', distanceManhattan(1, 1), 1, 1))
     
     while(not(pq.isEmpty())):
@@ -30,7 +33,7 @@ def SearchAlgorithm(type):
         if(type == 'DFS'):
             currentNode = pq.last()
             adjacents = getAdjacents(currentNode.__getattribute__("row"), currentNode.__getattribute__("column"), currentNode.__getattribute__("priority"), 0)
-        if(type == 'GREEDY'):
+        if(type == 'GREEDY MANHATTAN'):
             currentNode = pq.pop()
             adjacents = getAdjacents(currentNode.__getattribute__("row"), currentNode.__getattribute__("column"), 0, 'A')
         #Adjacents

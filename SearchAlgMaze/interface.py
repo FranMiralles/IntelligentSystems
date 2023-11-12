@@ -26,20 +26,20 @@ menuBar = tk.Menu(root)
 menuBar.config(bg = BACK, font = ('Normal', 9))
 root.config(menu = menuBar)
 presetMenu = tk.Menu(menuBar, tearoff=0)
-menuBar.add_cascade(label="Preset walls", menu=presetMenu)
+menuBar.add_cascade(label="Preset walls", menu=presetMenu, background=BACK)
 
 
-presetMenu.add_command(label="Preset #1", command=lambda num=1:selectPreset(0))
-presetMenu.add_command(label="Preset #2", command=lambda num=1:selectPreset(1))
-presetMenu.add_command(label="Preset #3", command=lambda num=1:selectPreset(2))
-presetMenu.add_command(label="Preset #4", command=lambda num=1:selectPreset(3))
-presetMenu.add_separator()
+presetMenu.add_command(label="Preset #1", command=lambda num=1:selectPreset(0), background=BACK)
+presetMenu.add_command(label="Preset #2", command=lambda num=1:selectPreset(1), background=BACK)
+presetMenu.add_command(label="Preset #3", command=lambda num=1:selectPreset(2), background=BACK)
+presetMenu.add_command(label="Preset #4", command=lambda num=1:selectPreset(3), background=BACK)
+presetMenu.add_separator(background=BACK)
 savePresetMenu = tk.Menu(presetMenu, tearoff=0)
-presetMenu.add_cascade(label="Save current as", menu=savePresetMenu)
-savePresetMenu.add_command(label="Preset #1", command=lambda num=1:savePreset(0))
-savePresetMenu.add_command(label="Preset #2", command=lambda num=1:savePreset(1))
-savePresetMenu.add_command(label="Preset #3", command=lambda num=1:savePreset(2))
-savePresetMenu.add_command(label="Preset #4", command=lambda num=1:savePreset(3))
+presetMenu.add_cascade(label="Save current as", menu=savePresetMenu, background=BACK)
+savePresetMenu.add_command(label="Preset #1", command=lambda num=1:savePreset(0), background=BACK)
+savePresetMenu.add_command(label="Preset #2", command=lambda num=1:savePreset(1), background=BACK)
+savePresetMenu.add_command(label="Preset #3", command=lambda num=1:savePreset(2), background=BACK)
+savePresetMenu.add_command(label="Preset #4", command=lambda num=1:savePreset(3), background=BACK)
 
 def selectPreset(num):
     with open(presetsData) as presets:
@@ -120,16 +120,16 @@ frm2.place(relx=0.7, rely=0.1, relwidth=0.25, relheight=0.4)
 def getAlgorithmName():
     return comboBox.get()
 
-solveButton = tk.Button(frm2, text="Solve")
+solveButton = tk.Button(frm2, text="Solve", bg=DIRT)
 solveButton.place(relx=0.05, rely=0.45, relwidth=0.45, relheight=0.5)
 
 def getSolveButoon():
     return solveButton
 
-clearButton = tk.Button(frm2, text="Clear Route")
+clearButton = tk.Button(frm2, text="Clear Route", bg=DIRT)
 clearButton.place(relx=0.5, rely=0.45, relwidth=0.45, relheight=0.25)
 
-clearAllButton = tk.Button(frm2, text="Clear All")
+clearAllButton = tk.Button(frm2, text="Clear All", bg=DIRT)
 clearAllButton.place(relx=0.5, rely=0.7, relwidth=0.45, relheight=0.25)
 
 def clearMethod(tipoClear):
@@ -145,6 +145,8 @@ def clearMethod(tipoClear):
 
 clearButton.bind("<Button-1>", lambda event, tipoClear=0: clearMethod(tipoClear))
 clearAllButton.bind("<Button-1>", lambda event, tipoClear=1: clearMethod(tipoClear))
+
+
 
 comboBox = ttk.Combobox(frm2, width=10, state="readonly", values=["BFS", "DFS", "GREEDY MANHATTAN", "A MANHATTAN"])
 comboBox.place(relx=0.05, rely=0.05, relwidth=0.9, relheight=0.15)

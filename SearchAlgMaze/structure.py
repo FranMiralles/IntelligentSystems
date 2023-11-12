@@ -8,6 +8,15 @@ class node:
     def toString(self):
         return self.step + str(self.priority) + str(self.row) + str(self.column)
     
+class node2:
+    def __init__(self, father, f, g, row, column):
+        self.father = father
+        self.f = f
+        self.g = g
+        self.row = row
+        self.column = column
+    def compare(self, node2):
+        return self.row == node2.__getattribute__("row") and self.column == node2.__getattribute__("column")
 
 # Representation of a priority queue
 class prioQueue:
@@ -18,7 +27,7 @@ class prioQueue:
             if element == existing_element:
                 return
         for i in range(len(self.elements)):
-            if element.priority <= self.elements[i].priority:
+            if element.f <= self.elements[i].f:
                 self.elements.insert(i, element)
                 return
         self.elements.append(element)

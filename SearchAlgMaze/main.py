@@ -66,7 +66,6 @@ def SearchAlgorithm(type):
     return "no encontrado"
             
 
-
 def getAdjacents(father, f, g, fatherRow, fatherColumn, type):
     res = []
     if (fatherColumn + 1 < 15  and inter.buttons[fatherRow][fatherColumn + 1].cget('bg') != inter.WALLS):
@@ -131,9 +130,10 @@ def createDirectionsMap():
     return directionsMap
 
 
+# In A algorithms, g has few weight, so distanceManhattan is /5 to lower its influence
 def distanceManhattan(row, column):
     # Goal point: 
-    return abs(row - 13) + abs(column - 13)
+    return (abs(row - 13) + abs(column - 13))/5
 
 
 solveButton = inter.getSolveButoon()

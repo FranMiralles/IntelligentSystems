@@ -44,9 +44,23 @@ def SearchAlgorithm(type):
                 inter.timeValue.config(text=str(round(fin - ini, 5)))
                 pq.clear()
                 return "encontrado"
-            if(directionsMap[adjacent.__getattribute__("row")][adjacent.__getattribute__("column")] == None or (None != nodeInClosed(close, adjacent) and adjacent.f < nodeInClosed(close, adjacent).f)):
+            if(directionsMap[adjacent.__getattribute__("row")][adjacent.__getattribute__("column")] == None):
                 directionsMap[adjacent.__getattribute__("row")][adjacent.__getattribute__("column")] = 0
                 pq.insert(adjacent)
+            #Re-expansion
+            else:
+                closed = elementInList(close, adjacent)
+                if(None != closed):
+                    if(adjacent.f < closed.f):
+                        close.remove(closed)
+                        pq.insert(adjacent)
+                else:
+                    opened = elementInList(pq.elements, adjacent)
+                    if(None != opened):
+                        if(adjacent.f < opened.f):
+                            pq.elements.remove(opened)
+                            pq.insert(adjacent)
+                    
 
     print("no encontrado")
     return "no encontrado"
@@ -100,8 +114,8 @@ def reconstructPath(directionsmap, goal):
     inter.pathLengthValue.config(text=str(lengthRoute))
 
 
-def nodeInClosed(close, node):
-    for element in close:
+def elementInList(list, node):
+    for element in list:
         if(node.compare(element)):
             return node
     return None

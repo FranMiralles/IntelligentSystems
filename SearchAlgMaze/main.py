@@ -32,20 +32,20 @@ def SearchAlgorithm(type):
 
         close.append(currentNode)
         if(type == 'BFS' or type == 'DFS'):
-            adjacents = getAdjacents(currentNode, currentNode.__getattribute__("f"), currentNode.__getattribute__("g"), currentNode.__getattribute__("row"), currentNode.__getattribute__("column"), 0)
+            adjacents = getAdjacents(currentNode, currentNode.f, currentNode.g, currentNode.row, currentNode.column, 0)
         if(type == 'GREEDY MANHATTAN'):
-            adjacents = getAdjacents(currentNode, currentNode.__getattribute__("f"), 0, currentNode.__getattribute__("row"), currentNode.__getattribute__("column"), 'A')
+            adjacents = getAdjacents(currentNode, currentNode.f, 0, currentNode.row, currentNode.column, 'A')
         if(type == 'A MANHATTAN'):
-            adjacents = getAdjacents(currentNode, currentNode.__getattribute__("f"), currentNode.__getattribute__("g"), currentNode.__getattribute__("row"), currentNode.__getattribute__("column"), 'A')
+            adjacents = getAdjacents(currentNode, currentNode.f, currentNode.g, currentNode.row, currentNode.column, 'A')
         for adjacent in adjacents:
-            if(adjacent.__getattribute__("row") == 13 and adjacent.__getattribute__("column") == 13):
+            if(adjacent.row == 13 and adjacent.column == 13):
                 reconstructPath(directionsMap, adjacent)
                 fin = time.time()
                 inter.timeValue.config(text=str(round(fin - ini, 5)))
                 pq.clear()
                 return "encontrado"
-            if(directionsMap[adjacent.__getattribute__("row")][adjacent.__getattribute__("column")] == None):
-                directionsMap[adjacent.__getattribute__("row")][adjacent.__getattribute__("column")] = 0
+            if(directionsMap[adjacent.row][adjacent.column] == None):
+                directionsMap[adjacent.row][adjacent.column] = 0
                 pq.insert(adjacent)
             #Re-expansion
             else:

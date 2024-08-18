@@ -1,6 +1,7 @@
 # Estudio de algoritmos de búsqueda aplicados en un laberinto
 
 🔗 Puedes encontrar un vídeo explicativo en el siguiente enlace:
+
 🔴 https://www.youtube.com/watch?v=4U52GHZS04Q&t=303s
 
 

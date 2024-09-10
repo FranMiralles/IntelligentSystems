@@ -55,5 +55,8 @@ def processRandomForest(test_size=0.2, random_state=42, n_estimators=100):
     rf_model = trainRandomForest(X_train, X_test, y_train, y_test, random_state=random_state, n_estimators=n_estimators)
     return storeRandomForest(rf_model=rf_model)
 
+
 processDecisionTree(0.2, 42)
 processRandomForest(0.2, 20, 200)
+
+# bagging, adaboost y gradient boosting

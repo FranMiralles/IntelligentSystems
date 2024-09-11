@@ -13,11 +13,19 @@ def root():
 
 @app.route('/api/processDecisionTree', methods=['GET'])
 def trainDecisionTree():
-    test_size = request.args.get('test_size')
-    random_state = request.args.get('random_state')
+    test_size = request.args.get('test_size', default=0.2, type=float)
+    random_state = request.args.get('random_state', default=42, type=int)
 
     result = processDecisionTree(test_size=test_size, random_state=random_state)
+    return jsonify({'output': result})
 
+@app.route('/api/processRandomForest', methods=['GET'])
+def trainRandomForest():
+    test_size = request.args.get('test_size', default=0.2, type=float)
+    random_state = request.args.get('random_state', default=42, type=int)
+    n_estimators = request.args.get('n_estimators', default=42, type=int)
+
+    result = processRandomForest(test_size=test_size, random_state=random_state, n_estimators=n_estimators)
     return jsonify({'output': result})
 
 if __name__ == '__main__':

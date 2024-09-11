@@ -1,4 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
+import { trainDecisionTree, trainRandomForest } from './services/apiService';
 
 const DrawCanvas = () => {
   const canvasRef = useRef(null);
@@ -62,6 +63,13 @@ const DrawCanvas = () => {
     return dataURL;
   };
 
+  const handleProcessDecissionTree = async () =>{
+    var result = await trainDecisionTree(0.2, 42)
+    var result = await trainRandomForest(0.2, 42, 100)
+    getImageData()
+    console.log(result)
+  }
+
   return (
     <div>
       <canvas
@@ -75,6 +83,7 @@ const DrawCanvas = () => {
         onMouseLeave={endDrawing} // Finaliza el dibujo si el cursor sale del canvas
       />
       <div style={{ marginTop: '10px' }}>
+        <button onClick={handleProcessDecissionTree}>Process Decission Tree</button>
         <button onClick={clearCanvas}>Clear Canvas</button>
         <button onClick={getImageData}>Get Image Data</button>
       </div>

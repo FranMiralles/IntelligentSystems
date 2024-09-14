@@ -1,10 +1,16 @@
 from sklearn.datasets import load_digits
+from sklearn.decomposition import PCA
 from sklearn.model_selection import train_test_split
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score
 import joblib
 import os
+import base64
+from io import BytesIO
+from PIL import Image
+import numpy as np
+import matplotlib.pyplot as plt
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 MODELS_DIR = os.path.join(SCRIPT_DIR, 'models')
@@ -55,9 +61,64 @@ def processRandomForest(test_size=0.2, random_state=42, n_estimators=100):
     rf_model = trainRandomForest(X_train, X_test, y_train, y_test, random_state=random_state, n_estimators=n_estimators)
     return storeRandomForest(rf_model=rf_model)
 
+def predictFromDecisionTree(imageToPredict):
+    dt_model = joblib.load(os.path.join(MODELS_DIR, 'decision_tree.joblib'))
+    if isinstance(dt_model, DecisionTreeClassifier):
+        image_vector = imageToPredict.flatten().reshape(1, -1)
+        return int(dt_model.predict(image_vector)[0])
+    else:
+        return -1
+
+def predictFromRandomForest(imageToPredict):
+    rf_model = joblib.load(os.path.join(MODELS_DIR, 'random_forest.joblib'))
+    if isinstance(rf_model, RandomForestClassifier):
+        image_vector = imageToPredict.flatten().reshape(1, -1)
+        return int(rf_model.predict(image_vector)[0])
+    else:
+        return -1
+
+
+def base64_to_grayscale_array(image_base64):
+    # Decodificar la imagen en base64
+    image_data = base64.b64decode(image_base64.split(',')[1])
+    
+    # Convertir los datos en un objeto PIL Image
+    image = Image.open(BytesIO(image_data))
+    
+    # Convertir la imagen a escala de grises
+    grayscale_image = image.convert("L")
+    
+    # Convertir la imagen a un array de numpy
+    grayscale_array = np.array(grayscale_image)
+    
+    # Escalar los valores de los píxeles de 0 a 16
+    scaled_grayscale_array = np.round((grayscale_array / 255) * 16).astype(int)
+    adjusted_grayscale_array = np.abs(scaled_grayscale_array - 16)
+
+    
+    return adjusted_grayscale_array
+
+# Paso 2: Redimensionar la imagen de 300x300 a 8x8
+def resize_image_to_8x8(grayscale_array):
+    # Convertir el array a una imagen PIL
+    image = Image.fromarray(grayscale_array.astype(np.uint8))
+    
+    # Redimensionar la imagen a 8x8 píxeles
+    resized_image = image.resize((8, 8), Image.ANTIALIAS)
+    
+    # Convertir la imagen redimensionada a un array
+    return np.array(resized_image)
+
+def display_image(image_array):
+    # Asegúrate de que la imagen esté en el rango correcto de 0 a 255 para visualizarla
+    plt.imshow(image_array, cmap='gray', vmin=0, vmax=16)
+    plt.colorbar(label='Escala de Grises (0-16)')
+    plt.show()
+
 
 # processDecisionTree(0.2, 42)
 # processRandomForest(0.2, 20, 200)
 
 
 # bagging, adaboost y gradient boosting
+    

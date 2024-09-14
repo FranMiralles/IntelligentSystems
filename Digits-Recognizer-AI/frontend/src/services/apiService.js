@@ -34,3 +34,20 @@ export const trainRandomForest = async (test_size, random_state, n_estimators) =
         return "Error"
     }
 };
+
+export const sendImage = async (image) => {
+    const url = 'http://localhost:5000/api/image';
+
+    let params = {
+        image: image,
+    };
+
+    try {
+        const response = await axios.get(url, { params });
+        console.log(response.data)
+        return response.data;
+
+    } catch (error) {
+        return "Error"
+    }
+};

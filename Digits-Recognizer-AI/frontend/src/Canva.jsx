@@ -1,66 +1,70 @@
-import React, { useRef, useState, useEffect } from 'react';
-import { trainDecisionTree, trainRandomForest } from './services/apiService';
+import React, { useRef, useState, useEffect } from 'react'
+import { trainDecisionTree, trainRandomForest, sendImage } from './services/apiService'
 
 const DrawCanvas = () => {
-  const canvasRef = useRef(null);
-  const [isDrawing, setIsDrawing] = useState(false);
+  const canvasRef = useRef(null)
+  const [isDrawing, setIsDrawing] = useState(false)
 
   useEffect(() => {
-    const canvas = canvasRef.current;
+    const canvas = canvasRef.current
     console.log(canvas)
-    const context = canvas.getContext('2d');
+    const context = canvas.getContext('2d')
+    context.lineCap = 'round'
+    context.strokeStyle = 'black'
+    context.fillStyle = 'white'
+    context.fillRect(0, 0, canvas.width, canvas.height)
+  }, [])
 
-    // Configura el canvas: estilo del pincel
-    context.lineWidth = 8; // Grosor del pincel
-    context.lineCap = 'round'; // Pincel redondeado
-    context.strokeStyle = 'black'; // Color del pincel
-
-    // Fondo blanco para el canvas
-    context.fillStyle = 'white';
-    context.fillRect(0, 0, canvas.width, canvas.height);
-  }, []);
-
-  // Función para iniciar el dibujo
   const startDrawing = ({ nativeEvent }) => {
     const { offsetX, offsetY } = nativeEvent;
     const context = canvasRef.current.getContext('2d');
-    context.beginPath();
-    context.moveTo(offsetX, offsetY);
+    context.lineCap = 'round';
+    context.lineJoin = 'round';
     setIsDrawing(true);
+    draw({ nativeEvent });
   };
-
-  // Función para continuar dibujando
+  
   const draw = ({ nativeEvent }) => {
     if (!isDrawing) return;
     const { offsetX, offsetY } = nativeEvent;
     const context = canvasRef.current.getContext('2d');
-    context.lineTo(offsetX, offsetY);
+    
+    // Crear degradado radial
+    const gradient = context.createRadialGradient(offsetX, offsetY, 0, offsetX, offsetY, 15);
+    gradient.addColorStop(0, 'rgba(0, 0, 0, 1)');
+    gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
+    console.log(gradient)
+  
+    // Aplicar el degradado como color del trazo
+    context.strokeStyle = gradient;
+    context.fillStyle = gradient;
+    context.lineWidth = 20;
+  
+    context.beginPath();
+    context.arc(offsetX, offsetY, 5, 0, Math.PI * 2);
+    context.fill();
+  
     context.stroke();
   };
-
-  // Función para finalizar el dibujo
+  
   const endDrawing = () => {
-    const context = canvasRef.current.getContext('2d');
-    context.closePath();
     setIsDrawing(false);
   };
-
-  // Función para limpiar el canvas
+  
   const clearCanvas = () => {
     const canvas = canvasRef.current;
     const context = canvas.getContext('2d');
     context.clearRect(0, 0, canvas.width, canvas.height);
-    // Fondo blanco para el canvas
     context.fillStyle = 'white';
     context.fillRect(0, 0, canvas.width, canvas.height);
   };
+  
 
-  // Función para extraer la imagen dibujada (en formato Base64)
   const getImageData = () => {
-    const canvas = canvasRef.current;
-    const dataURL = canvas.toDataURL('image/png');
-    console.log(dataURL); // Puedes enviar este dato a tu backend
-    return dataURL;
+    const canvas = canvasRef.current
+    const dataURL = canvas.toDataURL('image/png')
+    console.log(dataURL)
+    return dataURL
   };
 
   const handleProcessDecissionTree = async () =>{
@@ -80,15 +84,16 @@ const DrawCanvas = () => {
         onMouseDown={startDrawing}
         onMouseMove={draw}
         onMouseUp={endDrawing}
-        onMouseLeave={endDrawing} // Finaliza el dibujo si el cursor sale del canvas
+        onMouseLeave={endDrawing}
       />
       <div style={{ marginTop: '10px' }}>
+        <button onClick={()=>sendImage(getImageData())}>Send image</button>
         <button onClick={handleProcessDecissionTree}>Process Decission Tree</button>
         <button onClick={clearCanvas}>Clear Canvas</button>
         <button onClick={getImageData}>Get Image Data</button>
       </div>
     </div>
-  );
-};
+  )
+}
 
-export default DrawCanvas;
+export default DrawCanvas

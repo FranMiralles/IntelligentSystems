@@ -46,7 +46,7 @@ def image():
 
     classification = predictFromDecisionTree(resized_image)
     classificationRF = predictFromRandomForest(resized_image)
-    return jsonify({'output': classification, 'randomForest': classificationRF})
+    return jsonify({'decisionTree': classification, 'randomForest': classificationRF})
 
 
 if __name__ == '__main__':

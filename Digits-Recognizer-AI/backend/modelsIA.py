@@ -104,7 +104,7 @@ def resize_image_to_8x8(grayscale_array):
     image = Image.fromarray(grayscale_array.astype(np.uint8))
     
     # Redimensionar la imagen a 8x8 píxeles
-    resized_image = image.resize((8, 8), Image.ANTIALIAS)
+    resized_image = image.resize((8, 8), Image.Resampling.LANCZOS)
     
     # Convertir la imagen redimensionada a un array
     return np.array(resized_image)

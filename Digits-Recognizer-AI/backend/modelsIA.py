@@ -2,7 +2,7 @@ from sklearn.datasets import load_digits
 from sklearn.decomposition import PCA
 from sklearn.model_selection import train_test_split
 from sklearn.tree import DecisionTreeClassifier
-from sklearn.ensemble import RandomForestClassifier
+from sklearn.ensemble import AdaBoostClassifier, BaggingClassifier, GradientBoostingClassifier, RandomForestClassifier
 from sklearn.metrics import accuracy_score
 import joblib
 import os
@@ -39,15 +39,34 @@ def trainRandomForest(X_train, X_test, y_train, y_test, random_state=42, n_estim
     print(f"Accuracy Random Forest: {accuracy_score(y_test, y_pred_rf)}")
     return rf_model
 
+def trainBagging(X_train, X_test, y_train, y_test, random_state=42, n_estimators=50):
+    bg_model = BaggingClassifier(base_estimator=DecisionTreeClassifier(), n_estimators=n_estimators, random_state=random_state)
+    bg_model.fit(X_train, y_train)
+    y_pred_bg = bg_model.predict(X_test)
+    print(f'Accuracy Bagging: {accuracy_score(y_test, y_pred_bg)}')
+    return bg_model
+
+def trainAdaboost(X_train, X_test, y_train, y_test, random_state=42, n_estimators=50):
+    ab_model = AdaBoostClassifier(n_estimators=n_estimators, random_state=random_state)
+    ab_model.fit(X_train, y_train)
+    y_pred_ab = ab_model.predict(X_test)
+    print(f'Accuracy AdaBoost: {accuracy_score(y_test, y_pred_ab)}')
+    return ab_model
+
+def trainGradientBoosting(X_train, X_test, y_train, y_test, random_state=42, n_estimators=50):
+    gd_model = GradientBoostingClassifier(n_estimators=n_estimators, random_state=random_state)
+    gd_model.fit(X_train, y_train)
+    y_pred_gb = gd_model.predict(X_test)
+    print(f'Accuracy Gradient Boosting: {accuracy_score(y_test, y_pred_gb)}')
+    return gd_model
+
 
 def storeDecisionTree(dt_model):
-    model_dir = '/models/'
-    joblib.dump(dt_model, os.path.join(MODELS_DIR, 'decision_tree.joblib'))
+    joblib.dump(dt_model, os.path.join(MODELS_DIR, 'decision_tree.joblib')) # fileName
     return True
 
 def storeRandomForest(rf_model):
-    model_dir = '/models'
-    joblib.dump(rf_model, os.path.join(MODELS_DIR, 'random_forest.joblib'))
+    joblib.dump(rf_model, os.path.join(MODELS_DIR, 'random_forest.joblib')) # fileName
     return True
 
 
@@ -98,7 +117,6 @@ def base64_to_grayscale_array(image_base64):
     
     return adjusted_grayscale_array
 
-# Paso 2: Redimensionar la imagen de 300x300 a 8x8
 def resize_image_to_8x8(grayscale_array):
     # Convertir el array a una imagen PIL
     image = Image.fromarray(grayscale_array.astype(np.uint8))
@@ -110,7 +128,6 @@ def resize_image_to_8x8(grayscale_array):
     return np.array(resized_image)
 
 def display_image(image_array):
-    # Asegúrate de que la imagen esté en el rango correcto de 0 a 255 para visualizarla
     plt.imshow(image_array, cmap='gray', vmin=0, vmax=16)
     plt.colorbar(label='Escala de Grises (0-16)')
     plt.show()
@@ -118,7 +135,3 @@ def display_image(image_array):
 
 # processDecisionTree(0.2, 42)
 # processRandomForest(0.2, 20, 200)
-
-
-# bagging, adaboost y gradient boosting
-    

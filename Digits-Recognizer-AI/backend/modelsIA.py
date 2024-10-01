@@ -14,6 +14,16 @@ import matplotlib.pyplot as plt
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 MODELS_DIR = os.path.join(SCRIPT_DIR, 'models')
+DECISION_TREE_FILE = os.path.join(MODELS_DIR, 'decision_tree.joblib')
+RANDOM_FOREST_FILE = os.path.join(MODELS_DIR, 'random_forest.joblib')
+BAGGING_FILE = os.path.join(MODELS_DIR, 'bagging.joblib')
+ADABOOST_FILE = os.path.join(MODELS_DIR, 'adaboost.joblib')
+GRADIENT_BOOSTING_FILE = os.path.join(MODELS_DIR, 'gradient_boosting.joblib')
+DECISION_TREE_MODEL = "decision_tree"
+RANDOM_FOREST_MODEL = "decision_tree"
+BAGGING_MODEL = "bagging"
+ADABOOST_MODEL = "adaboost"
+GRADIENT_BOOSTING_MODEL = "gradient_boosting"
 
 
 def loadData(test_size=0.2, random_state=42):
@@ -24,77 +34,38 @@ def loadData(test_size=0.2, random_state=42):
     return X_train, X_test, y_train, y_test
 
 
-def trainDecisionTree(X_train, X_test, y_train, y_test, random_state=42):
-    dt_model = DecisionTreeClassifier(random_state=random_state)
-    dt_model.fit(X_train, y_train)
-    y_pred_dt = dt_model.predict(X_test)
-    print(f"Accuracy Decision Tree: {accuracy_score(y_test, y_pred_dt)}")
-    return dt_model
-
-
-def trainRandomForest(X_train, X_test, y_train, y_test, random_state=42, n_estimators=100):
-    rf_model = RandomForestClassifier(n_estimators=n_estimators, random_state=random_state)
-    rf_model.fit(X_train, y_train)
-    y_pred_rf = rf_model.predict(X_test)
-    print(f"Accuracy Random Forest: {accuracy_score(y_test, y_pred_rf)}")
-    return rf_model
-
-def trainBagging(X_train, X_test, y_train, y_test, random_state=42, n_estimators=50):
-    bg_model = BaggingClassifier(base_estimator=DecisionTreeClassifier(), n_estimators=n_estimators, random_state=random_state)
-    bg_model.fit(X_train, y_train)
-    y_pred_bg = bg_model.predict(X_test)
-    print(f'Accuracy Bagging: {accuracy_score(y_test, y_pred_bg)}')
-    return bg_model
-
-def trainAdaboost(X_train, X_test, y_train, y_test, random_state=42, n_estimators=50):
-    ab_model = AdaBoostClassifier(n_estimators=n_estimators, random_state=random_state)
-    ab_model.fit(X_train, y_train)
-    y_pred_ab = ab_model.predict(X_test)
-    print(f'Accuracy AdaBoost: {accuracy_score(y_test, y_pred_ab)}')
-    return ab_model
-
-def trainGradientBoosting(X_train, X_test, y_train, y_test, random_state=42, n_estimators=50):
-    gd_model = GradientBoostingClassifier(n_estimators=n_estimators, random_state=random_state)
-    gd_model.fit(X_train, y_train)
-    y_pred_gb = gd_model.predict(X_test)
-    print(f'Accuracy Gradient Boosting: {accuracy_score(y_test, y_pred_gb)}')
-    return gd_model
-
-
-def storeDecisionTree(dt_model):
-    joblib.dump(dt_model, os.path.join(MODELS_DIR, 'decision_tree.joblib')) # fileName
-    return True
-
-def storeRandomForest(rf_model):
-    joblib.dump(rf_model, os.path.join(MODELS_DIR, 'random_forest.joblib')) # fileName
-    return True
-
-
-def processDecisionTree(test_size=0.2, random_state=42):
+def trainModel(modelName, test_size=0.2, random_state=42, n_estimators=100):
     X_train, X_test, y_train, y_test = loadData(test_size=test_size, random_state=random_state)
-    dt_model = trainDecisionTree(X_train, X_test, y_train, y_test, random_state=random_state)
-    return storeDecisionTree(dt_model=dt_model)
 
-def processRandomForest(test_size=0.2, random_state=42, n_estimators=100):
-    X_train, X_test, y_train, y_test = loadData(test_size=test_size, random_state=random_state)
-    rf_model = trainRandomForest(X_train, X_test, y_train, y_test, random_state=random_state, n_estimators=n_estimators)
-    return storeRandomForest(rf_model=rf_model)
+    # Instantiate model
+    if modelName == DECISION_TREE_MODEL:
+        model = DecisionTreeClassifier(random_state=random_state)
+        fileToStore = DECISION_TREE_FILE
+    if modelName == RANDOM_FOREST_MODEL:
+        model = RandomForestClassifier(n_estimators=n_estimators, random_state=random_state)
+        fileToStore = RANDOM_FOREST_FILE
+    if modelName == BAGGING_MODEL:
+        model = BaggingClassifier(estimator=DecisionTreeClassifier(), n_estimators=n_estimators, random_state=random_state)
+        fileToStore = BAGGING_FILE
+    if modelName == ADABOOST_MODEL:
+        model = AdaBoostClassifier(estimator=DecisionTreeClassifier(), algorithm='SAMME', n_estimators=n_estimators, random_state=random_state)
+        fileToStore = ADABOOST_FILE
+    if modelName == GRADIENT_BOOSTING_MODEL:
+        model = GradientBoostingClassifier(n_estimators=n_estimators, random_state=random_state)
+        fileToStore = GRADIENT_BOOSTING_FILE
 
-def predictFromDecisionTree(imageToPredict):
-    dt_model = joblib.load(os.path.join(MODELS_DIR, 'decision_tree.joblib'))
-    if isinstance(dt_model, DecisionTreeClassifier):
-        image_vector = imageToPredict.flatten().reshape(1, -1)
-        return int(dt_model.predict(image_vector)[0])
-    else:
-        return -1
 
-def predictFromRandomForest(imageToPredict):
-    rf_model = joblib.load(os.path.join(MODELS_DIR, 'random_forest.joblib'))
-    if isinstance(rf_model, RandomForestClassifier):
-        image_vector = imageToPredict.flatten().reshape(1, -1)
-        return int(rf_model.predict(image_vector)[0])
-    else:
-        return -1
+    model.fit(X_train, y_train)
+    # Store model
+    joblib.dump(model, fileToStore)
+    y_pred_dt = model.predict(X_test)
+    return accuracy_score(y_test, y_pred_dt)
+
+
+def predictFromModel(modelFile, imageToPredict):
+    model = joblib.load(modelFile)
+    image_vector = imageToPredict.flatten().reshape(1, -1)
+    return int(model.predict(image_vector)[0])
 
 
 def base64_to_grayscale_array(image_base64):

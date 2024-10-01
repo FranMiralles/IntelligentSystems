@@ -1,5 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react'
-import { trainDecisionTree, trainRandomForest, sendImage } from './services/apiService'
+import { trainDecisionTree, trainRandomForest, sendImage, trainAll } from './services/apiService'
 
 const DrawCanvas = () => {
   const canvasRef = useRef(null)
@@ -7,7 +7,6 @@ const DrawCanvas = () => {
 
   useEffect(() => {
     const canvas = canvasRef.current
-    console.log(canvas)
     const context = canvas.getContext('2d')
     context.lineCap = 'round'
     context.strokeStyle = 'black'
@@ -33,7 +32,6 @@ const DrawCanvas = () => {
     const gradient = context.createRadialGradient(offsetX, offsetY, 0, offsetX, offsetY, 15);
     gradient.addColorStop(0, 'rgba(0, 0, 0, 1)');
     gradient.addColorStop(1, 'rgba(0, 0, 0, 0)');
-    console.log(gradient)
   
     // Aplicar el degradado como color del trazo
     context.strokeStyle = gradient;
@@ -74,6 +72,10 @@ const DrawCanvas = () => {
     console.log(result)
   }
 
+  const trainAllModels = () => {
+    trainAll(0.15, 42, 100).then((res) => console.log(res))
+  }
+
   return (
     <div>
       <canvas
@@ -91,6 +93,7 @@ const DrawCanvas = () => {
         <button onClick={handleProcessDecissionTree}>Process Decission Tree</button>
         <button onClick={clearCanvas}>Clear Canvas</button>
         <button onClick={getImageData}>Get Image Data</button>
+        <button onClick={trainAllModels}>TRAIN ALL</button>
       </div>
     </div>
   )
